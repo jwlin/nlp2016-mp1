@@ -1,6 +1,6 @@
 
 KENLM := ./kenlm/bin
-ORDER := 3
+ORDER := 6
 
 
 
@@ -16,8 +16,9 @@ kenlm:
 	wget -O - http://kheafield.com/code/kenlm.tar.gz | tar xz
 	cd kenlm && ./bjam -j4
 pypackages:
-	python3 -mpip install jieba
-	python3 -mpip install hanziconv
+	#python3 -mpip install jieba
+	#python3 -mpip install hanziconv
+	python3 -mpip install -r requirement.txt
 ###
 
 prediction.csv: 
