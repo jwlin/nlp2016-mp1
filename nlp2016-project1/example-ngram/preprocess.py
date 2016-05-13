@@ -28,7 +28,24 @@ def load_dataset(infile, transform=None, tokenizer=None):
         if tokenizer:
             #text = HanziConv.toSimplified(text)
             text = HanziConv.toTraditional(text)
-            text = list( w for w in tokenizer.cut(sanitize(text)) if w != ' ' )
+            #text = list( w for w in tokenizer.cut(sanitize(text)) if w != ' ' )
+            new_text = list()
+            word = ''
+            for w in sanitize(text):
+                if w == ' ':
+                    if word:
+                        new_text.append(word)
+                        word = ''
+                elif isEnglish(w):
+                    word += w
+                else:
+                    if word:
+                        new_text.append(word)
+                        word = ''
+                    new_text.append(w)
+            if word:
+                new_text.append(word)
+            text = new_text
             try:
                 pos  = text.index('EMOTICON')
                 if transform:
@@ -53,6 +70,15 @@ def sanitize(text):
     for k, v in rword.items():
         text = text.replace(k, v)
     return text
+
+
+def isEnglish(s):
+    try:
+        s.encode('ascii')
+    except UnicodeEncodeError:
+        return False
+    else:
+        return True
 
 
 if __name__ == '__main__':
