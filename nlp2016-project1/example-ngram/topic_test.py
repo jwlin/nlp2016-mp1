@@ -12,7 +12,7 @@ with open('stop_words.txt', 'r') as f:
     for line in f:
         stopwords.append(line.split()[0])
     stopwords.append(' ')
-    #stopwords.append('EMOTICON')
+    stopwords.append('EMOTICON')
 
 
 def main():
@@ -32,11 +32,13 @@ def main():
                 doc = testing_corpus_data[rid]['feature']
             else:
                 doc = list( w for w in jieba.cut(sanitize(text)) if w not in stopwords)
+                '''
                 pos = doc.index('EMOTICON')
                 offset = 5
                 left = pos-offset if pos-offset >= 0 else 0
                 right = pos+offset if pos+offset <= len(doc)-1 else len(doc)-1
                 doc = list( w for w in doc[left:right+1] if w not in ['EMOTICON'])
+                '''
                 testing_corpus_data[rid] = dict()
                 testing_corpus_data[rid]['feature'] = doc
             testing_corpus_data[rid]['emot'] = []
@@ -56,17 +58,17 @@ def main():
     #lda = models.ldamodel.LdaModel.load('train.lda')
     index = similarities.MatrixSimilarity.load('train.index')
 	
-    #with open('training_corpus.json', 'r') as f:
-    #    training_corpus_data = json.load(f)
+    with open('training_corpus.json', 'r') as f:
+        training_corpus_data = json.load(f)
     
-    
+    '''
     training_corpus = list()
     with open('top50.txt') as f:
         for line in f:
             line = line.replace('\n', '')
             line = line.split('\t')
             training_corpus.append(line)
-    
+    '''
     c=0
     for testing_id in testing_corpus_data.keys():
         #print(testing_id, testing_corpus_data[testing_id]['feature'])
@@ -79,14 +81,12 @@ def main():
         top3 = [ele[0] for ele in sims[:3] if ele[1] > 0.9]
         #print('top 6:', sims[:6])
         for training_index in top3:
-            '''
             for training_id in training_corpus_data.keys():
                 if training_corpus_data[training_id]['index'] == training_index:
                     #print(training_corpus_data[training_id]['feature'])
                     testing_corpus_data[testing_id]['emot'].append(training_corpus_data[training_id]['emot'])
                     break
-            '''
-            testing_corpus_data[testing_id]['emot'].append(training_corpus[training_index][0])
+            #testing_corpus_data[testing_id]['emot'].append(training_corpus[training_index][0])
             #print(testing_corpus_data[testing_id]['feature'])
             #print(training_corpus[training_index])
         print(c)

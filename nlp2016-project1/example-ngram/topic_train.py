@@ -9,7 +9,6 @@ from preprocess import sanitize
 
 
 def main():
-    '''
     t_start = time.time()
     if os.path.exists('training_corpus.json'):
         with open('training_corpus.json', 'r') as f:
@@ -38,23 +37,24 @@ def main():
     print('time elapsed for building corpus: %f minutes' % ((t_end-t_start)/60.0))
     with open('training_corpus.json', "w") as f:
         json.dump(training_corpus_data, f, indent=2, ensure_ascii=False, sort_keys=True)
+    
     '''
-
     training_corpus = list()
     with open('top50.txt') as f:
         for line in f:
             line = line.replace('\n', '')
             line = line.split('\t')[2:]
             training_corpus.append(line)
+    '''
     
     dictionary = corpora.Dictionary(training_corpus)
-    #stoplist = [line.lower().split()[0] for line in open('stop_words.txt', 'r')]
+    stoplist = [line.lower().split()[0] for line in open('stop_words.txt', 'r')]
     # remove stop words and words that appear only once
-    #stop_ids = [dictionary.token2id[stopword] for stopword in stoplist if stopword in dictionary.token2id]
-    #once_ids = [tokenid for tokenid, docfreq in dictionary.dfs.items() if docfreq == 1]
+    stop_ids = [dictionary.token2id[stopword] for stopword in stoplist if stopword in dictionary.token2id]
+    once_ids = [tokenid for tokenid, docfreq in dictionary.dfs.items() if docfreq == 1]
     #once_ids = []
-    #dictionary.filter_tokens(stop_ids + once_ids) # remove stop words and words that appear only once
-    #dictionary.compactify() # remove gaps in id sequence after words that were removed
+    dictionary.filter_tokens(stop_ids + once_ids) # remove stop words and words that appear only once
+    dictionary.compactify() # remove gaps in id sequence after words that were removed
     #print(dictionary)
     dictionary.save('train.dict')  # store the dictionary, for future reference
     
