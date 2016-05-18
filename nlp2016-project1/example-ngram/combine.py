@@ -10,14 +10,14 @@ with open('../prediction-filter-punc-dict-pseg-6gram.csv', 'r') as f:
         ans.append(ele)
 
 topic_ans = dict()
-with open('prediction-all-corpus-0.9.csv', 'r') as f:
+with open('../prediction-all-corpus-0.9.csv', 'r') as f:
     for line in f:
         if line.startswith('Id'):
             continue
         topic_ans[line.split(',')[0]] = line.split(',')[1].split()
 
 
-with open('prediction-6gram-all-0.9.csv', 'w') as f:    
+with open('../prediction-6gram-all-0.9.csv', 'w') as f:    
     f.write('Id,Emoticon\n')
     for e in ans:
         f.write(e['id'] + ',')

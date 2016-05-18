@@ -2,8 +2,12 @@ import json
 
 with open('collocation.json', 'r') as f:
     emot_dict = json.load(f)
+
 with open('collocation_lr.json', 'r') as f:
     lr_data = json.load(f)
+
+stoplist = [line.lower().split()[0] for line in open('stop_words.txt', 'r')]
+stoplist += ['喔', '啦', '很', '我', '你', '唷', '囉', 'ㄉ', 'ㄌ', '呢', '真是','吧', '也', '阿', '啊', '真的', '在', '又', 'ㄚ','哦','他']
 
 data = dict()
 for emot, v_dict in emot_dict.items():
@@ -17,7 +21,8 @@ for emot, v_dict in emot_dict.items():
 for emot, v_dict in lr_data.items():
     term_list = list()
     for term, lr in v_dict.items():
-        term_list.append((term, lr, emot_dict[emot][term]))
+        if term not in stoplist:
+            term_list.append((term, lr, emot_dict[emot][term]))
     term_list = sorted(term_list, key=lambda x:-x[1])
     data[emot]['lh_ratio'] = term_list[:10]
 
